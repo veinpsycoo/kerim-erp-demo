@@ -200,6 +200,9 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
           fullPage: true,
           animations: "disabled",
         });
+      if (id === "stock") {
+        await expect(page.getByText("Lokasyon bakiyeleri örnek stoklardır.", { exact: true })).toBeVisible();
+      }
       if (id === "channels") {
         await expect(page.locator("#multiplier-example")).toBeVisible();
         await expect(page.locator("#multiplier-example")).toContainText(

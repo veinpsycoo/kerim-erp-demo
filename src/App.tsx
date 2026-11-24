@@ -1271,7 +1271,7 @@ export default function App() {
                 <span>
                   {criticalOnly
                     ? "20 adetten az stok gösteriliyor."
-                    : "Lokasyon bakiyeleri örnek stoklardır"}
+                    : "Lokasyon bakiyeleri örnek stoklardır."}
                 </span>
               </div>
               <section className="panel product-table">
