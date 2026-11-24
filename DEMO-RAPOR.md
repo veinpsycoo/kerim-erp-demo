@@ -1,62 +1,56 @@
-# Kerim ERP demo — 4. tur arayüz yenilemesi
+# Kerim ERP demo — 4. tur denetim düzeltmeleri
 
-Talep: 24 Kasım 2026 · Son doğrulama: 25 Kasım 2026 (İstanbul).
+Doğrulama: 25 Kasım 2026 (İstanbul).
 Canlı: https://veinpsycoo.github.io/kerim-erp-demo/
-Test edilen ve yayımlanan uygulama commit’i: `c160457bfee7285124e65528f53cc195e40a4ba7`.
-CI ve canlı turu: https://github.com/veinpsycoo/kerim-erp-demo/actions/runs/45503160772
+Test edilen uygulama commit’i: `bbe1df98de98539677d5d9b22ba3cc475430af7c`.
+CI, yayın ve canlı tur: https://github.com/veinpsycoo/kerim-erp-demo/actions/runs/45508783833
+Canlı ürün kartı ölçümü: https://github.com/veinpsycoo/kerim-erp-demo/actions/runs/45509745571
 
-## Sonuç ve kullanım
+## Talep bazında sonuç
 
-- İlk girişte **Kimsiniz?**: Yönetici, Depo, Mağaza, Muhasebe. Seçim hatırlanır; profil çipinden **Rol değiştir** açılır. Çalışan seçimi profil sayfasındadır.
-- Mobilde beşli alt menü ve Daha fazla listesi; masaüstünde koyu zeytin menü. Breadcrumb, hamburger ve üst bardaki kullanıcı seçici kaldırıldı.
-- Depo toplamayla; Mağaza fotoğraflı satışla; Muhasebe tahsilatla; Yönetici dört adet göstergesi, dikkat listesi ve tek satır kanal özetiyle açılır.
-- Stok, ürün kartı, eşleştirme, set, sipariş/sevkiyat, cari, personel, rapor, günlük ve belgeler aynı yazı/boşluk/yüzey sistemiyle yenilendi. Mobil ürün matrisi etiketli satırlar halinde, yatay kaydırmasızdır.
-- Toplama tek ürün gösterir; fotoğraf, lokasyon, istenen/hazırlanan adet, Topladım, kısmi miktar ve personel notu korunur. Raf verisi olmadığında açıkça belirtilir.
-- Bot Vatkası 1/12/3 kartı Kanallar’ın başındadır. Eşleştirme dolu tüm-kanal görünümüyle açılır; onay/ret, başka SKU ve toplu onay korunur.
-- Teknik demo açıklaması profil/ayarlarda toplanmıştır. Özgün SP-DEMO/SV-DEMO kayıt kodları veri bütünlüğü için korunur; kullanıcı arayüzünde Demo: öneki yoktur.
+1. Mobil toplamada ana eylem **Kaydet** oldu. Ortak çekmece alt eylemleri mobilde tam genişlikte üst üste; alt alan küçülmüyor. Kaydırma boyutları, metin sınırları ve ekran içindeki konum betikle ölçüldü. Yerel ve canlı aşamanın her birinde **58 alt buton raporu**, toplam **116 rapor**, **0 hata**. Kaydet, Kapat, Kaydediliyor…, Onayla, İşlemi onayla, Siparişi onayla, Talep oluştur, Makbuzu kaydet ve Ekstreyi görüntüle durumları kapsandı.
+2. Üst bardaki tekrar eden sayfa adı kaldırıldı. Masaüstünde sağda Demo ve profil; mobilde solda küçük Asker Marketi markası var. Sayfa adı yalnız büyük içerik başlığında.
+3. Profil çipi avatar harfi ve tek satır rol adı gösteriyor. Çalışan seçimi profil sayfasında.
+4. Dikkat isteyenlerde 0 değerli satırlar gizleniyor. Hepsi 0 olduğunda **Şu an dikkat isteyen iş yok** durumu iki genişlikte test edildi. Eşleştirme satırı **Eşleştirilecek ilan**, alt yazı **1 Ocak’a kadar eşleştirme planı**; alarm/amber rengi yok.
+5. Kritik stok ve stok listesi ortak `isCritical` hesabını kullanıyor: ürünün toplam stoğu <20; Yönetici için tüm lokasyonlar. Yönetici açıklaması kapsamı belirtiyor. Yeni bağımsız 390/1366 kontrolleri IndexedDB kaynak verisiyle karşılaştırıldı: **5 / 5**. Eski **32**, `attempt1/desktop-1366-Yönetici-dashboard.png` ara tur görüntüsünde; önceki nihai masaüstü ve mobil görüntülerde **5** vardı. Farklı aşamalara ait kanıtlar karıştırılmış. Eski görüntülerin hash ve sayıları `demo-kanit/round4/stock-discrepancy.json` içinde. Mevcut kullanıcı verisi sıfırlanmadı.
+6. Yayın ve canlı denetim tamamlandı; sekiz seçme görüntü aynı canlı build’den yeniden alınıp görsel olarak kontrol edildi.
 
-## Ölçülmüş kabul sonuçları
+## Ölçülmüş doğrulama
 
-- **51/51** birim testi; **7/7** salt okuma senkron testi.
-- **60/60** yayın öncesi E2E; **60/60** canlı E2E; atlanan ve kararsız test **0**.
-- Her aşamada dört rol ve tüm yetkili menüler: **56** rol/menü/ekran ölçümü; iki aşamada **112**. Genişlikler **390 ve 1366 px**.
-- Konsol hatası **0**, yatay sayfa taşması **0**, 44 px altı dokunma hedefi **0**, 13 px altı metin **0**, hesaplanan AA metin kontrast hatası **0**.
-- Ürün matrisinin kendi kaydırma genişliği ve lokasyon/adet aralığı ayrıca ölçüldü; tablo adı Türkçe ve erişilebilir. Klavye odak halkası ve azaltılmış hareket tercihi test edildi.
-- Lint ve typecheck hatasız; build ve yüksek önem seviyeli bağımlılık denetimi başarılı. Yeni npm bağımlılığı eklenmedi. Önceden kalan veri paketi/font yolu derleme uyarıları aşağıda belirtilmiştir.
-- Beş yerel Manrope dosyasında Türkçe karakter kapsamı doğrulandı. Token kontrastları `design-checks.json` içinde.
-- Görünür metin dökümü ve Türkçe kontrolü `gorunen-metinler.txt`, `turkce-kontrol.json` içinde; bozuk kodlama karakteri ve Demo: öneki **0**. Kaynak ürün adları korunur. NIM denemesi geçerli son çıktı üretmedi; döküm elle denetlendi.
+- **51/51** birim testi, **7/7** salt okuma senkron testi.
+- **62/62** yayın öncesi E2E, **62/62** canlı E2E; atlanan/kararsız test **0**.
+- Dört rolün tüm yetkili menüleri, 390 ve 1366 px: aşama başına **56**, toplam **112** ekran ölçümü.
+- Konsol hatası, yatay taşma, 44 px altı hedef, 13 px altı yazı, hesaplanan AA metin kontrast hatası: **0**.
+- Sıfır dikkat boş durumu, stok sayısı/liste eşitliği, rol değişimi, odak, azaltılmış hareket, İstanbul gece yarısı, çevrimdışı açılış ve tarayıcıda gerçek SW cache adı test edildi.
+- Lint, typecheck, build ve bağımlılık denetimi geçti; **0 güvenlik açığı**. Yeni paket eklenmedi.
+- Tam sayfa ekran görüntüsü sırasında Chromium geçici **1×1 / 4×4** görünüm oluşturuyor. Alt buton ölçümü hedef cihaz boyutuna sabitlendi; geçici boyutlar ayrıca JSON’da kaydediliyor. Önceki sabit `-4` test beklentisi gerçek build cache adına bağlandı.
+- Kabul özeti: `demo-kanit/round4/acceptance.json` → **passed: true**. Görünür metinlerde Demo: öneki ve bozuk kodlama karakteri **0**; değişen Türkçe metinler gözden geçirildi.
 
-## Veri, güvenlik ve önbellek
+## Yayın, veri ve güvenlik
 
-- Domain, seed, katalog, eşleştirme/set kuralları, İkas okuma kodu ve diğer çekirdeklerden **8 dosya** hash düzeyinde aynıdır. Zorunlu gizlilik istisnasıyla `gercek.json` ve `sync-gercek.py` yalnız ürün URL’lerindeki merchantId/sellerId sorgu parametresini kaldırmak için değişti. **2.832 bağlantı** temizlendi; URL dışındaki bütün snapshot alanları aynı iş verisi hash’indedir (`protected-files.json`, `url-privacy-fix.json`). API çağrısı yapılmadı.
-- Yapılandırmadaki kısa tanımlayıcı dahil bütün değerler UTF-8/UTF-16 ve kısa tam-token karşılaştırmasıyla tarandı. Bulunan public merchantId URL parametresi kaldırıldı; yeni orphan commit eski referans zincirini temizledi.
-- İkas, Trendyol ve WooCommerce salt okuma düzeni değişmedi; mutation ve gerçek stok/fiyat gönderimi eklenmedi. Gerçek ciro veya sipariş tutarı yayımlanmaz; ekranda görülen cari/işlem tutarları örnektir.
-- Ayrıca 5.122 gerçek siparişin JSON alanları denetlendi: parasal alan **0**. Önceki ifşa örneği kaynak/build/uzak geçmişte bulunmuyor (`financial-scan.json`); ürünlerin halka açık satış fiyatları izin verilen istisnadır.
-- Yayın öncesi ve sonrası tam değer, token, WooCommerce ve Basic Auth kodlama taraması: **0 eşleşme**. Kaynak, build, kayıtlar, Git nesneleri ve erişilebilir uzak geçmiş tarandı. Sonuçlar: `security-before.json`, `security-scan.json`.
-- Önceki yayın geçmişi orphan yöntemle temizlendi. Sonraki belgeleme commit’leri aynı doğrulanmış uygulama dosyalarını taşır.
-- Service worker: `am-79142891c106-4`. Eski önbellekler aktivasyonda temizlenir; skipWaiting/clientsClaim korunur. Canlı HTML/JS/CSS/SW/robots dosyaları yerel build ile hash düzeyinde aynı ve sır içermiyor (`../live-release-check.json`).
-- Noindex ve robots Disallow korunmuştur. Satış formu, rapor ayı, ekstre testi ve saat gösterimleri İstanbul takvimine bağlandı; UTC gece yarısı satışının Bugün listesine girdiği regresyon testi vardır.
+- SW: **am-58c7b30d2d79-5**. Yerel ve canlı tarayıcı cache kontrolü geçti.
+- Canlı HTML, JS, CSS, SW ve robots dosyaları yerel build ile aynı hash’te: `demo-kanit/live-release-check.json`.
+- Yapılandırmadaki anahtarların gerçek değerleri, kısa tanımlayıcıları, UTF-8/UTF-16 karşılıkları, WooCommerce/token desenleri ve Basic auth kodlamaları tarandı. Yayın öncesi ve sonrası **0 eşleşme**. Son kapsam yerel kaynak/build/kanıt/loglar ve tüm uzak main geçmişi; sonuç `demo-kanit/round4/security-scan.json`. Yayın öncesi kayıt `security-before-audit.json`.
+- Özel ciro/tutar taraması temiz; 5.122 siparişin izinli alanları doğrulandı: `financial-scan.json`.
+- Önceki nihai turdaki **10 çekirdek/veri/senkron dosyası aynı hash’te**: `audit-protected-files.json`. İş kuralları, seed ve gerçek snapshot değişmedi. İkas veya diğer iş kanallarına yazma/API mutation yapılmadı.
+- Yayın betiği, kimlik doğrulama hatasını eksik repo sanıp başlatma denememesi için yalnız HTTP 404’te başlatma yoluna giriyor.
+- Müşteriye mesaj gönderilmedi. Kullanıcının tarayıcı sekmelerine dokunulmadı; otomatik test bağlamları kapatıldı.
 
-## Kanıtlar
+## Canlı seçme görüntüler
 
-- Ana klasör: `demo-kanit/round4/`; yayın öncesi `local/`, canlı `live/` altında tüm rol turları, ürün/matris, kanallar, toplama, cari, belgeler ve işlem kanıtları.
-- Sunum için **6 adet gerçek 390×844 canlı ekran görüntüsü**, kırpma veya görsel düzenleme yapılmadan `secme/` içine alındı:
-  `01-rol-secimi.png`, `02-yonetici.png`, `03-depo.png`, `04-magaza.png`, `05-muhasebe.png`, `06-merkez-stok.png`.
-- `mobile-card/geometry.json` ve iki 390×844 görüntü, ürün kartının sabit başlık/alt eylemlerinin ekran içinde kaldığını ayrıca doğrular.
-- `secme/manifest.json` çekim zamanını ve canlı/build eşleşmesini kaydeder. Sayısal kabul özeti `acceptance.json` içindedir.
+`demo-kanit/round4/secme/` içinde:
 
-## Üretim öncesinde Kerim’in kararlaştıracağı konular
+1. `01-rol-secimi.png`
+2. `02-yonetici.png`
+3. `03-depo.png`
+4. `04-magaza.png`
+5. `05-muhasebe.png`
+6. `06-merkez-stok.png`
+7. `07-toplama-390.png`
+8. `08-yonetici-1366.png`
 
-Bot Vatkası için parça/çift birimi; kanallara Ümraniye stoğu mu ortak havuz mu gönderileceği ve güvenlik stoğu; setlerde giyim/ayakkabı varyant eşleşmeleri; paket çarpanlarını kimin onaylayacağı üretim kurulumu öncesinde netleştirilmelidir. Bunlar mevcut demo akışını durdurmaz.
+İlk yedi görüntü 390×844, son görüntü 1366×900. `manifest.json` canlı kaynak ve çekim zamanını içerir. Rol/menü ve diğer iş akışı kanıtları `local/` ve `live/` altındadır.
 
-## Bilinen sınırlar ve ortam notları
+## Bilinen sınırlar
 
-Statik PWA’dır; gerçek oturum/sunucu yetkilendirmesi ve cihazlar arası veri paylaşımı yoktur. Stok ve cari işlemleri örnektir; fatura ve satış botu kapsam dışıdır. N11 anahtarı beklenir; kaynakta yönetilmeyen WooCommerce stokları bilinmiyor olarak kalır. Eksik örnek ürün fotoğraflarında temsili katalog görseli açıkça etiketlenir. Fiziksel telefon, Safari ve Firefox testi yapılmadı; doğrulama Chromium 390/1366 emülasyonudur.
-
-Vite, korunmuş katalog veri paketinin yaklaşık 8,7 MB ham boyutu ve public font yolları için uyarı verir; derleme hatası yoktur. Runtime font yüklemesi, Türkçe karakterler ve canlı asset hash’leri doğrulandı.
-
-Yerel Windows IPC engeli Playwright işçilerini başlatamadı; gerçek tarayıcı testleri GitHub Actions’ta yürütüldü. Yerel önizleme ve açılan iki test tarayıcısı durduruldu; kullanıcı Chrome sekmelerine dokunulmadı. Oluşturulan geçici metin dosyaları/loglar temizlendi. Otomatik izin denetimi iki boş test profili klasörünün (toplam yaklaşık 3,8 MB) ve eski UTF-16 logların silinmesini reddetti; bunlar .gitignore kapsamındadır ve yayına dahil değildir. Müşteriye mesaj gönderilmedi.
-
----
-Önceki tur raporu yerel kanıt klasöründe tarihsel kayıt olarak saklanmıştır.
-
+Bu statik demo; stok, cari tutarlar ve işlemler tarayıcıya özeldir. Farklı tarayıcılarda ayrı işlemler yapılırsa stoklar farklılaşabilir; gerçek cihazlar arası işlem senkronizasyonu eklenmedi. N11 bekliyor; görsellerin temsili olanları etiketli. Fiziksel cihaz, Safari ve Firefox bu turda ölçülmedi. Önceden bulunan büyük veri paketi ve statik font yolu build uyarıları sürüyor; canlı dosya ve font yüklemesi testlerde doğrulandı. Önceki turlardan kalan tarayıcı profilleri bu çalışmada kullanılmadı veya silinmedi.
