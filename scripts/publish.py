@@ -49,7 +49,7 @@ if not orphan:
             tree.append({'path':rel,'mode':'100644','type':'blob','sha':None});changed+=1
 if not tree:print('Remote already matches workspace');raise SystemExit(0)
 t=api(repo+'/git/trees',{'tree':tree} if orphan else {'base_tree':base,'tree':tree})
-c=api(repo+'/git/commits',{'message':'Round 4 audit fixes: unclipped dialogs, quiet dashboard and consistent stock','tree':t['sha'],'parents':[] if orphan else [parent]})
+c=api(repo+'/git/commits',{'message':'Round 4c: polish visible copy and normalize sample record labels','tree':t['sha'],'parents':[] if orphan else [parent]})
 current=api(repo+'/git/ref/heads/main')['object']['sha']
 if current!=parent:raise RuntimeError('Remote head changed; refusing to overwrite concurrent work')
 api(repo+'/git/refs/heads/main',{'sha':c['sha'],'force':orphan},'PATCH')

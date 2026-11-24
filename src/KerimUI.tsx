@@ -88,7 +88,7 @@ export function SourceRecipes({
             </p>
             <p>
               {p.recipeText ||
-                "API açıklaması boş. Tam reçete tahmin edilmez; elle oluşturulabilir."}
+                "Ürün açıklaması boş. Tam reçete tahmin edilmez; elle oluşturulabilir."}
             </p>
             <p>
               <a href={p.url} target="_blank" rel="noreferrer">
@@ -119,7 +119,7 @@ export function SyncStatus() {
   return (
     <section className="sync-strip" aria-label="Senkron durumu">
       <strong>
-        Son senkron:{" "}
+        Son güncelleme:{" "}
         {real.syncedAt
           ? new Date(real.syncedAt).toLocaleString("tr-TR", {
               timeZone: "Europe/Istanbul",
@@ -1221,7 +1221,7 @@ export function Reports({ s }: { s: State }) {
         ))}
         {!liveRows.size && <p>Seçili dönemde okunabilen set siparişi yok.</p>}
         <small>
-          Gerçek reçete/beden çözümü ürün API bilgisinden gelir; onaysız
+          Gerçek reçete/beden çözümü kanal bilgisinden gelir; onaysız
           başlıklardan beden veya 6’lı/12’li sayısı uydurulmaz. İptal / iade /
           başarısız / bekleyen durumları set satış adetlerinden çıkarılır; brüt
           özet bütün siparişleri kapsar.

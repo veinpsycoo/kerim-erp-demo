@@ -53,6 +53,12 @@ Canlı ürün kartı ölçümü: https://github.com/veinpsycoo/kerim-erp-demo/ac
 
 ## Bilinen sınırlar
 
+### 4c metin rötuşu — 25 Kasım 2026
+
+Görünen örnek kimlikler SP/SV/CR-2026-0001 biçimine, çalışan adları sade adlara çevrildi. Eski tarayıcı kayıtları stok, tutar ve işlem ilişkileri korunarak aynı metinlere dönüştürülür. Tek Demo rozeti korunur. Sevkiyat, fiyat yuvarlama, güncelleme, ürün açıklaması, eşleştirme tarihi ve kayıt bildirimi sadeleştirildi; profil düğmesinin erişilebilir adı görünen rolü içerir. SW sürüm son eki 6 oldu.
+
+Yerelde 53 birim ve 7 senkron testi, lint, tip kontrolü, build ve bağımlılık taraması geçti. Yerel tarayıcı süreci `spawn EPERM` ile engellendi; 390/1366 testleri yayın iş akışında zorunlu olarak çalışır. Bu paragraf yayın ve canlı doğrulama tamamlandı anlamına gelmez; kesin sonuç 4c teslim kaydındadır.
+
 Bu statik demo; stok, cari tutarlar ve işlemler tarayıcıya özeldir. Farklı tarayıcılarda ayrı işlemler yapılırsa stoklar farklılaşabilir; gerçek cihazlar arası işlem senkronizasyonu eklenmedi. N11 bekliyor; görsellerin temsili olanları etiketli. Fiziksel cihaz, Safari ve Firefox bu turda ölçülmedi. Önceden bulunan büyük veri paketi ve statik font yolu build uyarıları sürüyor; canlı dosya ve font yüklemesi testlerde doğrulandı. Önceki turlardan kalan tarayıcı profilleri bu çalışmada kullanılmadı veya silinmedi.
 
 Geçici `.ci-audit-watch.log` (yaklaşık 27 KB), boş `.ci-audit-failed.log` ve `test-results/.last-run.json` silme komutu otomatik güvenlik denetimince reddedildi; bu yerel çıktılar tutuldu. Yayın dosyalarına dahil değiller. Silme kısıtı başka araçla aşılmadı.

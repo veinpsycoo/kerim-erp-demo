@@ -132,7 +132,7 @@ async function nav(page: Page, name: string) {
 }
 async function user(page: Page, id: string) {
   await page
-    .getByRole("button", { name: "Profil ve ayarlar", exact: true })
+    .locator(".profile-chip")
     .last()
     .click();
   await page.getByLabel("Aktif kullanıcı").selectOption(id);
@@ -324,6 +324,7 @@ test("çarpan, yuvarlama, ürün istisnası ve gönderim kuyruğu", async ({
     .click();
   await page.getByRole("spinbutton", { name: "Kanal çarpanı" }).fill("1.5");
   await page.getByRole("heading", { name: "Trendyol fiyat kuralı" }).click();
+  await expect(page.getByRole("option", { name: "Yukarı yuvarla (…,90)", exact: true })).toHaveCount(1);
   await expect
     .poll(async () => (await state(page)).rules.Trendyol.multiplier)
     .toBe(1.5);
@@ -348,6 +349,8 @@ test("çarpan, yuvarlama, ürün istisnası ve gönderim kuyruğu", async ({
   expect((await state(page)).queue[0].count).toBe(
     (await state(page)).products.length,
   );
+  expect((await state(page)).queue[0].status).toBe("Tamamlandı");
+  expect((await state(page)).logs[0].message).toMatch(/fiyat önizlemesi hazırlandı\.$/);
 });
 test("20 kalemli set satışı ortak alt stokları günceller", async ({
   page,
@@ -506,7 +509,8 @@ test("sevkiyat talebi, gönderen onayı ve alıcı teslim onayı", async ({
   const before = await state(page);
   const l = before.transfers[0].lines[0];
   const p = before.products.find((p) => p.id === l.product)!;
-  await page.getByRole("button", { name: "Sevki onayla", exact: true }).click();
+  await page.getByRole("button", { name: "Sevkiyatı onayla", exact: true }).click();
+  await expect(page.locator("dialog[open]")).toContainText("Sevkiyatı onaylıyor musunuz?");
   await approve(page);
   let after = await state(page);
   expect(
@@ -607,7 +611,7 @@ test("personel rol ve lokasyon kartı ile izin avans kaydı", async ({
   await row.getByRole("button", { name: "İzin / avans" }).click();
   await page.getByLabel("Kayıt türü").selectOption("Avans");
   await page.getByLabel("Gün / tutar (₺)").fill("1500");
-  await page.getByLabel("Açıklama", { exact: true }).fill("Demo avans kaydı");
+  await page.getByLabel("Açıklama", { exact: true }).fill("Avans kaydı");
   await page.getByRole("button", { name: "Kaydet", exact: true }).click();
   await expect(page.locator("dialog[open]")).toHaveCount(0);
   await expect(row).toContainText("1.500,00");

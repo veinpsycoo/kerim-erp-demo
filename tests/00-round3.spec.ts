@@ -162,6 +162,10 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
       });
     await page.getByRole("button", { name: new RegExp("^" + role) }).click();
     await expect(page.locator(".page-heading h1")).toHaveText("Bugün");
+    await expect(page.locator(".profile-chip")).toHaveAccessibleName(`${role} — profil ve ayarlar`);
+    if (role === "Yönetici") {
+      await expect(page.getByText("1 Ocak 2027’ye kadar eşleştirilecek", { exact: true })).toBeVisible();
+    }
     const results = [];
     for (const [id, name] of menus) {
       const allowed =
@@ -186,8 +190,9 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
       expect(m.contrastFailures, "AA contrast " + id).toEqual([]);
       expect(m.tinyTargets, "touch targets " + id).toEqual([]);
       expect(m.text).not.toContain("Demo:");
+      expect(m.text).not.toMatch(/DEMO|Demo (?:Depocu|Yönetici|Mağazacı|Muhasebeci)|Sevki onay|Son senkron|API açıklaması|ürün API bilgisi|ağ isteği yapılmadı|Yukarı ,90|\(demo\)|İşlem çalışma alanı veritabanına/);
       expect(
-        m.text.replace(/(?:SP|SV)-DEMO-\d+/g, "").match(/\bdemo\b/gi),
+        m.text.match(/\bdemo\b/gi),
       ).toEqual(["Demo"]);
       if (["dashboard", "stock", "channels", "accounts"].includes(id))
         await page.screenshot({
@@ -233,12 +238,14 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
       await page.getByRole("button", { name: "Pencereyi kapat" }).click();
     }
     await page
-      .getByRole("button", { name: "Profil ve ayarlar", exact: true })
+      .locator(".profile-chip")
       .last()
       .click();
     await expect(
       page.getByRole("button", { name: "Rol değiştir" }),
     ).toBeVisible();
+    expect(await page.locator("body").innerText()).toMatch(/Demo/);
+    expect((await page.locator("body").innerText()).match(/\bdemo\b/gi)).toEqual(["Demo"]);
     await page.reload();
     await expect(page.locator(".profile-chip")).toContainText(role);
     expect(errors).toEqual([]);
@@ -265,7 +272,7 @@ test("Klavye odağı, hareket tercihi ve rol değiştirme", async ({ page }) => 
   ).toBe("0s");
   await button.click();
   await page
-    .getByRole("button", { name: "Profil ve ayarlar", exact: true })
+    .locator(".profile-chip")
     .last()
     .click();
   await page.getByRole("button", { name: "Rol değiştir" }).click();

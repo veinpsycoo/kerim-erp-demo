@@ -74,28 +74,28 @@ export function seed(): State {
     ],
     entries: [
       {
-        id: "CR-DEMO-1",
+        id: "CR-2026-0001",
         account: "C-001",
         date: yesterday,
-        memo: "Demo açılış bakiyesi",
+        memo: "Açılış bakiyesi",
         debit: 18450,
         credit: 0,
         due: new Date(Date.now() + 15 * 86400000).toISOString(),
       },
       {
-        id: "CR-DEMO-2",
+        id: "CR-2026-0002",
         account: "C-002",
         date: yesterday,
-        memo: "Demo açılış bakiyesi",
+        memo: "Açılış bakiyesi",
         debit: 7200,
         credit: 0,
         due: today,
       },
       {
-        id: "CR-DEMO-3",
+        id: "CR-2026-0003",
         account: "C-003",
         date: yesterday,
-        memo: "Demo tedarikçi bakiyesi",
+        memo: "Tedarikçi bakiyesi",
         debit: 0,
         credit: 32600,
         due: today,
@@ -104,28 +104,28 @@ export function seed(): State {
     staff: [
       {
         id: "P-001",
-        name: "Demo Yönetici",
+        name: "Yönetici",
         role: "Yönetici",
         location: 0,
         records: [],
       },
       {
         id: "P-002",
-        name: "Demo Depocu",
+        name: "Depocu",
         role: "Depo",
         location: 0,
         records: [],
       },
       {
         id: "P-003",
-        name: "Demo Mağazacı",
+        name: "Mağazacı",
         role: "Mağaza",
         location: 1,
         records: [],
       },
       {
         id: "P-004",
-        name: "Demo Muhasebeci",
+        name: "Muhasebeci",
         role: "Muhasebe",
         location: 0,
         records: [],
@@ -133,7 +133,7 @@ export function seed(): State {
     ],
     orders: [
       {
-        id: "SP-DEMO-001",
+        id: "SP-2026-0001",
         channel: "Toptan",
         customer: "C-001",
         location: 0,
@@ -145,7 +145,7 @@ export function seed(): State {
         posted: false,
       },
       {
-        id: "SP-DEMO-002",
+        id: "SP-2026-0002",
         channel: "Trendyol",
         customer: "Kurgusal perakende müşteri",
         location: 0,
@@ -157,7 +157,7 @@ export function seed(): State {
         posted: true,
       },
       {
-        id: "SP-DEMO-003",
+        id: "SP-2026-0003",
         channel: CHANNELS[0],
         customer: "Kurgusal perakende müşteri",
         location: 1,
@@ -171,7 +171,7 @@ export function seed(): State {
     ],
     transfers: [
       {
-        id: "SV-DEMO-001",
+        id: "SV-2026-0001",
         from: 0,
         to: 1,
         lines: [line(3, 4)],
@@ -202,10 +202,10 @@ export function seed(): State {
     ),
     logs: [
       {
-        id: "LOG-DEMO",
+        id: "LOG-2026-0001",
         date: today,
         message:
-          "Demo çalışma alanı hazırlandı. Tüm operasyon kayıtları kurgusaldır.",
+          "Çalışma alanı hazırlandı. Tüm operasyon kayıtları kurgusaldır.",
         kind: "Sistem",
       },
     ],

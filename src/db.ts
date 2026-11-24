@@ -3,6 +3,7 @@ import type { State } from "./domain";
 import { seed } from "./seed";
 import { snapshotKey } from './snapshot';
 import { suggestions } from './kerim';
+import { normalizeSavedText } from './saved-text';
 const db = openDB("asker-marketi-demo", 1, {
   upgrade(d) {
     d.createObjectStore("state");
@@ -10,8 +11,12 @@ const db = openDB("asker-marketi-demo", 1, {
 });
 export async function readState(): Promise<State> {
   const d = await db;
-  const s = await d.get("state", "main");
+  const stored = await d.get("state", "main");
+  const { state: s, changed } = stored?.version === 2
+    ? normalizeSavedText(stored)
+    : { state: stored, changed: false };
   if (s?.version === 2) {
+    if (changed) await d.put('state', s, 'main');
     if(s.snapshotKey!==snapshotKey){
       const fresh=seed();
       const known=new Set(s.products.map((p:State['products'][number])=>p.id));

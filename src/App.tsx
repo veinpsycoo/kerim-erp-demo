@@ -508,7 +508,7 @@ export default function App() {
             {accountName(e.account)} · {date(e.date)}
           </p>
           <h2>{money(e.debit || e.credit)}</h2>
-          <p>İşlem çalışma alanı veritabanına kaydedilmiştir.</p>
+          <p>Kaydedildi.</p>
         </Doc>
       );
     }
@@ -683,7 +683,7 @@ export default function App() {
             <span className="demo-badge">Demo</span>
             <button
               className="profile-chip"
-              aria-label="Profil ve ayarlar"
+              aria-label={`${role} — profil ve ayarlar`}
               onClick={() => navigate("profile")}
             >
               <span className="avatar">{role[0]}</span>
@@ -897,7 +897,7 @@ export default function App() {
               </Field>
               <h2>Bu çalışma alanı hakkında</h2>
               <p>
-                Demo ortamıdır. Ürünler ve anonim sipariş adetleri kanallardan
+                Ürünler ve anonim sipariş adetleri kanallardan
                 salt okunur. Lokasyon stokları, cari tutarlar ve burada
                 kaydedilen işlemler örnektir; yalnız bu tarayıcıda saklanır.
                 Kanallara veri gönderilmez. Faturalama Paraşüt’te devam eder.
@@ -977,7 +977,7 @@ export default function App() {
                       {
                         count: unmappedCount,
                         label: "Eşleştirilecek ilan",
-                        detail: "1 Ocak’a kadar eşleştirme planı",
+                        detail: "1 Ocak 2027’ye kadar eşleştirilecek",
                         target: "channels",
                         Icon: Link2,
                       },
@@ -1006,7 +1006,7 @@ export default function App() {
                         </button>
                       ))}
                     {overdueCount + unmappedCount + lowKitCount === 0 && (
-                      <p>Şu an dikkat isteyen iş yok</p>
+                      <p>Şu an dikkat isteyen iş yok.</p>
                     )}
                   </section>
                   <section className="panel">
@@ -1025,7 +1025,7 @@ export default function App() {
                         }{" "}
                         bağlı
                         <small>
-                          Son senkron{" "}
+                          Son güncelleme{" "}
                           {new Date(real.syncedAt).toLocaleTimeString("tr-TR", {
                             timeZone: "Europe/Istanbul",
                             hour: "2-digit",
@@ -1501,8 +1501,8 @@ export default function App() {
                         }
                       >
                         <option value="none">Kuruşu koru</option>
-                        <option value="90">Yukarı ,90</option>
-                        <option value="integer">Yukarı tam TL</option>
+                        <option value="90">Yukarı yuvarla (…,90)</option>
+                        <option value="integer">Yukarı yuvarla (tam TL)</option>
                       </select>
                     </Field>
                     <button
@@ -1514,12 +1514,12 @@ export default function App() {
                               id: uid("KY"),
                               channel,
                               count: n.products.length,
-                              status: "Tamamlandı (demo)",
+                              status: "Tamamlandı",
                               date: now(),
                             });
                             log(
                               n,
-                              `${channel}: ${n.products.length} fiyat simüle edildi; ağ isteği yapılmadı`,
+                              `${channel}: ${n.products.length} fiyat önizlemesi hazırlandı.`,
                               "Kanal",
                             );
                           },
@@ -1888,7 +1888,7 @@ export default function App() {
                           <button
                             onClick={() =>
                               confirm(
-                                "Gönderen lokasyondan stok düşülecek. Sevki onaylıyor musunuz?",
+                                "Gönderen lokasyondan stok düşülecek. Sevkiyatı onaylıyor musunuz?",
                                 (n) =>
                                   transferStep(
                                     n,
@@ -1902,7 +1902,7 @@ export default function App() {
                               )
                             }
                           >
-                            Sevki onayla
+                            Sevkiyatı onayla
                           </button>
                           <button
                             className="secondary"
@@ -3556,8 +3556,7 @@ export default function App() {
           onClose={() => setModal(undefined)}
           onSubmit={(f) =>
             void submit(f, (n, f) => {
-              let name = value(f, "name").trim();
-              if (!name.startsWith("Demo")) name = "Demo " + name;
+              const name = value(f, "name").trim();
               const next: Staff = {
                 id: staff?.id || uid("P"),
                 name,
