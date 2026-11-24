@@ -1,0 +1,23 @@
+name: Capture Round 4 presentation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/presentation.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: round4-presentation
+          path: presentation
