@@ -12,8 +12,11 @@ for stage in ['local','live']:
   for view in d['results']:
    rows.append({'role':d['role'],'viewport':p.name.split('-'+d['role'])[0],'page':view['id'],'overflow':view['overflow'],'smallText':len(view['tinyText']),'smallTargets':len(view['tinyTargets']),'contrastFailures':len(view.get('contrastFailures',[]))})
    corpus+=view['text'].splitlines()
+ footers=[json.loads(p.read_text(encoding='utf-8-sig')) for p in folder.glob('footer-*.json')]
+ footer_failures=sum(len(f['failures']) for f in footers)
+ footer_buttons=sorted({key for f in footers for key in f['checked']})
  violations=sum(int(r['overflow'])+r['smallText']+r['smallTargets']+r['contrastFailures'] for r in rows)
- stages[stage]={'passed':stats['expected']==60 and stats['unexpected']==0 and stats['skipped']==0 and stats['flaky']==0 and len(rows)==56 and violations==0 and not errors,'tests':stats,'menuViewportChecks':len(rows),'consoleErrors':len(errors),'violations':violations,'screens':rows}
+ stages[stage]={'footerReports':len(footers),'footerButtons':footer_buttons,'footerFailures':footer_failures,'passed':len(footers)>=58 and footer_failures==0 and stats['expected']==62 and stats['unexpected']==0 and stats['skipped']==0 and stats['flaky']==0 and len(rows)==56 and violations==0 and not errors,'tests':stats,'menuViewportChecks':len(rows),'consoleErrors':len(errors),'violations':violations,'screens':rows}
 images=[]
 for p in sorted((base/'secme').glob('*.png')):
  width,height=struct.unpack('>II',p.read_bytes()[16:24]);images.append({'file':p.name,'width':width,'height':height})
@@ -24,6 +27,6 @@ lang={'demoPrefixCount':text.count('Demo:'),'encodingReplacementCount':text.coun
 card=json.loads((base/'mobile-card/geometry.json').read_text(encoding='utf-8-sig'))
 expected_scripts=[p.name for p in (ROOT/'dist/assets').glob('*.js')]
 card_current=card.get('passed',False) and all(all(any(name in url for url in c['script']) for name in expected_scripts) for c in card['checks'])
-result={'mobileCardGeometry':card,'mobileCardUsesCurrentBuild':card_current,'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'passed':card_current and all(stages[s].get('passed',False) for s in ['local','live']) and len(images)==6 and all(i['width']==390 and i['height']==844 for i in images) and not lang['demoPrefixCount'] and not lang['encodingReplacementCount'],'stages':stages,'presentation':images,'textReview':lang}
+result={'mobileCardGeometry':card,'mobileCardUsesCurrentBuild':card_current,'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'passed':card_current and all(stages[s].get('passed',False) for s in ['local','live']) and len(images)==8 and all((i['width'],i['height'])==((1366,900) if i['file']=='08-yonetici-1366.png' else (390,844)) for i in images) and not lang['demoPrefixCount'] and not lang['encodingReplacementCount'],'stages':stages,'presentation':images,'textReview':lang}
 (base/'acceptance.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps({'passed':result['passed'],'stages':{k:{x:v[x] for x in ['passed','menuViewportChecks','consoleErrors','violations'] if x in v} for k,v in stages.items()},'presentationImages':len(images),'textReview':lang},ensure_ascii=True))

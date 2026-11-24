@@ -5,7 +5,7 @@ import {
   type TestInfo,
   type BrowserContext,
 } from "@playwright/test";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { State } from "../src/domain";
 import { installFooterAudit, verifyFooterAudit } from "./footer-audit";
@@ -678,6 +678,12 @@ test("PWA çevrimdışı yeniden açılır, katalog görselleri yereldir", async
       page.evaluate(() => navigator.serviceWorker.controller !== null),
     )
     .toBe(true);
+  const expectedCache = (await readFile("dist/sw.js", "utf8")).match(
+    /const CACHE='([^']+)'/,
+  )![1];
+  await expect
+    .poll(() => page.evaluate(() => caches.keys()))
+    .toContain(expectedCache);
   await context.setOffline(true);
   await page.reload();
   await expect(page.locator(".page-heading h1")).toHaveText("Bugün");

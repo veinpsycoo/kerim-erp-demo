@@ -4,7 +4,9 @@ import { join } from "node:path";
 
 export async function installFooterAudit(page: Page) {
   await page.addInitScript(() => {
-    const result = { checked: [] as string[], failures: [] as unknown[] };
+    const result: { checked: string[]; failures: unknown[] } = JSON.parse(
+      sessionStorage.getItem("footer-audit") || '{"checked":[],"failures":[]}',
+    );
     Object.assign(window, { footerAudit: result });
     let scheduled = false;
     const scan = () => {
@@ -43,6 +45,7 @@ export async function installFooterAudit(page: Page) {
               clientHeight: button.clientHeight,
             });
         });
+      sessionStorage.setItem("footer-audit", JSON.stringify(result));
     };
     const start = () => {
       new MutationObserver(() => {
