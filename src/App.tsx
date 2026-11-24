@@ -711,7 +711,7 @@ export default function App() {
                             ? "Mağazanızın günlük işleri bir arada."
                             : role === "Muhasebe"
                               ? "Tahsilatları ve cari hareketleri takip edin."
-                              : "İşinize genel bir bakış. Öncelikleriniz burada.",
+                              : "Tüm lokasyonlardaki işlerinize genel bir bakış.",
                       profile: "Çalışma alanınızı ve erişiminizi yönetin.",
                       more: "İhtiyacınız olan diğer çalışma alanları.",
                       stock:
@@ -959,10 +959,7 @@ export default function App() {
                         <span>{label}</span>
                         <strong>{count}</strong>
                         <span className="kpi-link">
-                          {target === "stock"
-                            ? "Tüm lokasyonlar · İncele"
-                            : "İncele"}{" "}
-                          <ChevronRight size={18} />
+                          İncele <ChevronRight size={18} />
                         </span>
                       </button>
                     ))}

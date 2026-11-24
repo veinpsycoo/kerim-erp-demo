@@ -14,7 +14,8 @@ def api(path,data=None,method=None):
     return json.loads(r.stdout) if r.stdout else {}
 try:
     ref=api(repo+'/git/ref/heads/main');parent=ref['object']['sha']
-except RuntimeError:
+except RuntimeError as error:
+    if 'HTTP 404' not in str(error):raise
     c=api(repo+'/contents/README.md',{'message':'Initialize Asker Marketi ERP demo','content':base64.b64encode((root/'README.md').read_bytes()).decode()},'PUT')
     parent=c['commit']['sha']
 commit=api(repo+'/git/commits/'+parent);base=commit['tree']['sha']

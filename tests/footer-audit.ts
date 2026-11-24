@@ -4,8 +4,13 @@ import { join } from "node:path";
 
 export async function installFooterAudit(page: Page) {
   await page.addInitScript((viewport) => {
-    const result: { checked: string[]; failures: unknown[] } = JSON.parse(
-      sessionStorage.getItem("footer-audit") || '{"checked":[],"failures":[]}',
+    const result: {
+      checked: string[];
+      failures: unknown[];
+      captureViewports: string[];
+    } = JSON.parse(
+      sessionStorage.getItem("footer-audit") ||
+        '{"checked":[],"failures":[],"captureViewports":[]}',
     );
     Object.assign(window, { footerAudit: result });
     let scheduled = false;
@@ -16,8 +21,13 @@ export async function installFooterAudit(page: Page) {
       if (
         viewport &&
         (innerWidth !== viewport.width || innerHeight !== viewport.height)
-      )
+      ) {
+        const size = `${innerWidth}x${innerHeight}`;
+        if (!result.captureViewports.includes(size))
+          result.captureViewports.push(size);
+        sessionStorage.setItem("footer-audit", JSON.stringify(result));
         return;
+      }
       document
         .querySelectorAll<HTMLButtonElement>("dialog[open] .dialog-foot button")
         .forEach((button) => {
@@ -55,6 +65,7 @@ export async function installFooterAudit(page: Page) {
       sessionStorage.setItem("footer-audit", JSON.stringify(result));
     };
     const start = () => {
+      addEventListener("resize", () => requestAnimationFrame(scan));
       new MutationObserver(() => {
         if (!scheduled) {
           scheduled = true;
