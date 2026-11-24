@@ -53,8 +53,8 @@ try {
       images.push({
         file: name + ".png",
         url: page.url(),
-        width: 390,
-        height: 844,
+        width: page.viewportSize().width,
+        height: page.viewportSize().height,
       });
     };
     if (index === 0) await capture("01-rol-secimi");
@@ -64,12 +64,22 @@ try {
       ["02-yonetici", "03-depo", "04-magaza", "05-muhasebe"][index],
     );
     if (index === 0) {
+      await page.setViewportSize({ width: 1366, height: 900 });
+      await capture("08-yonetici-1366");
+      await page.setViewportSize({ width: 390, height: 844 });
       await page
         .getByRole("navigation", { name: "Alt menü" })
         .getByRole("button", { name: "Stok", exact: true })
         .click();
       await page.locator(".product-row").first().waitFor();
       await capture("06-merkez-stok");
+    }
+    if (index === 1) {
+      await page
+        .getByRole("button", { name: "Toplamaya başla", exact: true })
+        .click();
+      await page.locator("dialog[open] .dialog-foot").waitFor();
+      await capture("07-toplama-390");
     }
     await context.close();
   }

@@ -69,10 +69,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run build
       - run: npm run e2e
         env:
           LIVE_URL: https://veinpsycoo.github.io/kerim-erp-demo/
           EVIDENCE_DIR: playwright-evidence/live
+      - run: node scripts/presentation.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: round4-presentation
+          path: presentation
       - uses: actions/upload-artifact@v4
         if: always()
         with:

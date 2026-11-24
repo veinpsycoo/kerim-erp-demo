@@ -60,6 +60,7 @@ import {
   positive,
   log,
   type State,
+  type Product,
   type Role,
   type Line,
   type Staff,
@@ -398,10 +399,12 @@ export default function App() {
     : loc >= 0 && userLocations.includes(loc)
       ? loc
       : ownLoc;
+  const isCritical = (p: Product, location?: number) =>
+    totalStock(p, location) < 20;
   const filtered = s.products.filter(
     (p) =>
       (!criticalOnly ||
-        totalStock(p, effectiveLoc < 0 ? undefined : effectiveLoc) < 20) &&
+        isCritical(p, effectiveLoc < 0 ? undefined : effectiveLoc)) &&
       (!category || p.category === category) &&
       `${p.name.replace(/^Demo /, "")} ${p.id} ${p.category}`
         .toLocaleLowerCase("tr")
@@ -559,9 +562,16 @@ export default function App() {
   const shipping = transfers.filter((t) =>
     ["Talep", "Yolda"].includes(t.status),
   );
-  const critical = s.products.filter(
-    (p) => totalStock(p, manager ? undefined : ownLoc) < 20,
+  const critical = s.products.filter((p) =>
+    isCritical(p, manager ? undefined : ownLoc),
   );
+  const overdueCount = pending.filter(
+    (o) => Date.now() - new Date(o.created).getTime() > 86400000,
+  ).length;
+  const unmappedCount = s.listings.filter(
+    (l) => !l.confirmed && !l.rejected,
+  ).length;
+  const lowKitCount = s.kits.filter((k) => capacity(s, k, "M", 1) < 5).length;
   const debtors = s.accounts.filter((a) => balance(s, a.id) > 0);
   const title =
     page === "profile"
@@ -668,7 +678,7 @@ export default function App() {
       </aside>
       <div className="main-shell">
         <header className="topbar">
-          <span className="screen-label">{title}</span>
+          <span className="screen-label">Asker Marketi</span>
           <div className="profile-area">
             <span className="demo-badge">Demo</span>
             <button
@@ -677,10 +687,7 @@ export default function App() {
               onClick={() => navigate("profile")}
             >
               <span className="avatar">{role[0]}</span>
-              <span>
-                {activeUser?.name.replace(/^Demo /, "")}
-                <small>{role}</small>
-              </span>
+              <span>{role}</span>
             </button>
           </div>
         </header>
@@ -952,69 +959,58 @@ export default function App() {
                         <span>{label}</span>
                         <strong>{count}</strong>
                         <span className="kpi-link">
-                          İncele <ChevronRight size={18} />
+                          {target === "stock"
+                            ? "Tüm lokasyonlar · İncele"
+                            : "İncele"}{" "}
+                          <ChevronRight size={18} />
                         </span>
                       </button>
                     ))}
                   </div>
                   <section className="panel">
                     <h2>Dikkat isteyenler</h2>
-                    <button
-                      className="task-row"
-                      onClick={() => navigate("orders")}
-                    >
-                      <Clock />
-                      <span>
-                        24 saati aşan siparişler
-                        <small>
-                          Hazırlanmayı bekleyen siparişleri inceleyin.
-                        </small>
-                      </span>
-                      <strong>
-                        {
-                          pending.filter(
-                            (o) =>
-                              Date.now() - new Date(o.created).getTime() >
-                              86400000,
-                          ).length
-                        }
-                      </strong>
-                      <ChevronRight />
-                    </button>
-                    <button
-                      className="task-row"
-                      onClick={() => navigate("channels")}
-                    >
-                      <Link2 />
-                      <span>
-                        Eşleşme bekleyen ilanlar
-                        <small>Merkez ürün bağlantısını doğrulayın.</small>
-                      </span>
-                      <strong>
-                        {
-                          s.listings.filter((l) => !l.confirmed && !l.rejected)
-                            .length
-                        }
-                      </strong>
-                      <ChevronRight />
-                    </button>
-                    <button
-                      className="task-row"
-                      onClick={() => navigate("kits")}
-                    >
-                      <Layers />
-                      <span>
-                        Stoğu azalan setler
-                        <small>Reçete ve kullanılabilir stok.</small>
-                      </span>
-                      <strong>
-                        {
-                          s.kits.filter((k) => capacity(s, k, "M", 1) < 5)
-                            .length
-                        }
-                      </strong>
-                      <ChevronRight />
-                    </button>
+                    {[
+                      {
+                        count: overdueCount,
+                        label: "24 saati aşan siparişler",
+                        detail: "Hazırlanmayı bekleyen siparişleri inceleyin.",
+                        target: "orders",
+                        Icon: Clock,
+                      },
+                      {
+                        count: unmappedCount,
+                        label: "Eşleştirilecek ilan",
+                        detail: "1 Ocak’a kadar eşleştirme planı",
+                        target: "channels",
+                        Icon: Link2,
+                      },
+                      {
+                        count: lowKitCount,
+                        label: "Stoğu azalan setler",
+                        detail: "Reçete ve kullanılabilir stok.",
+                        target: "kits",
+                        Icon: Layers,
+                      },
+                    ]
+                      .filter((item) => item.count > 0)
+                      .map(({ count, label, detail, target, Icon }) => (
+                        <button
+                          key={target}
+                          className="task-row"
+                          onClick={() => navigate(target)}
+                        >
+                          <Icon />
+                          <span>
+                            {label}
+                            <small>{detail}</small>
+                          </span>
+                          <strong>{count}</strong>
+                          <ChevronRight />
+                        </button>
+                      ))}
+                    {overdueCount + unmappedCount + lowKitCount === 0 && (
+                      <p>Şu an dikkat isteyen iş yok</p>
+                    )}
                   </section>
                   <section className="panel">
                     <h2>Kanallar</h2>
@@ -3059,7 +3055,7 @@ export default function App() {
           busy={busy}
           error={error}
           onClose={() => setModal(undefined)}
-          submit="Toplamayı kaydet"
+          submit="Kaydet"
           onSubmit={
             order.status === "Toplanacak" && canStock
               ? (f) =>

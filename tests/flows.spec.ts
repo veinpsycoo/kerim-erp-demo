@@ -8,6 +8,7 @@ import {
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import type { State } from "../src/domain";
+import { installFooterAudit, verifyFooterAudit } from "./footer-audit";
 const evidence = process.env.EVIDENCE_DIR || "playwright-evidence/local";
 // Model one device per viewport. Keep immutable PWA assets cached, but reset
 // IndexedDB before every scenario so operations remain isolated without
@@ -35,8 +36,9 @@ const test = base.extend<
     await cachedContext.setOffline(false);
     await use(cachedContext);
   },
-  page: async ({ context }, use) => {
+  page: async ({ context }, use, info) => {
     const page = await context.newPage();
+    await installFooterAudit(page);
     await page.goto("./");
     await page.evaluate(() => localStorage.removeItem("am-role"));
     await page.reload();
@@ -59,6 +61,7 @@ const test = base.extend<
         }),
     );
     await use(page);
+    await verifyFooterAudit(page, info);
     await context.setOffline(false);
     await page.close();
   },

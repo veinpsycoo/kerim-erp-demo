@@ -8,5 +8,5 @@ count=0
 with zipfile.ZipFile(io.BytesIO(api('actions/artifacts/'+str(item['id'])+'/zip'))) as z:
  for n in z.namelist():
   p=pathlib.PurePosixPath(n)
-  if p.suffix in ['.png','.json'] and (kind=='matrix' or p.name=='manifest.json' or re.match(r'^0[1-6]-',p.name)):(out/p.name).write_bytes(z.read(n));count+=1
+  if p.suffix in ['.png','.json'] and (kind=='matrix' or p.name=='manifest.json' or re.match(r'^0[1-8]-',p.name)):(out/p.name).write_bytes(z.read(n));count+=1
 print(json.dumps({'kind':kind,'files':count,'path':str(out)}))

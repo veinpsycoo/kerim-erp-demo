@@ -281,12 +281,13 @@ input {
   height: 96px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   padding: 0 40px;
   border-bottom: 1px solid var(--line);
 }
 .screen-label {
+  display: none;
   font-size: 16px;
   font-weight: 650;
 }
@@ -1099,6 +1100,7 @@ dialog > form {
   min-height: 0;
 }
 .dialog-foot {
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -1275,7 +1277,9 @@ td input {
     background: var(--canvas);
   }
   .screen-label {
-    font-size: 16px;
+    display: block;
+    margin-right: auto;
+    font-size: 14px;
   }
   .profile-area {
     gap: 8px;
@@ -1292,7 +1296,9 @@ td input {
     font-size: 14px;
   }
   .avatar {
-    display: none;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
   }
   .content {
     padding: 32px 20px 120px;
@@ -1678,8 +1684,15 @@ td input {
     padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
     flex-shrink: 0;
   }
+  .dialog-foot {
+    flex-direction: column-reverse;
+  }
   .dialog-foot > button {
-    flex: 1;
+    width: 100%;
+    flex: none;
+    min-height: 48px;
+    height: auto;
+    white-space: normal;
   }
   .picking-row > .product-image {
     height: 220px;

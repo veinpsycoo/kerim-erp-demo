@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { installFooterAudit, verifyFooterAudit } from "./footer-audit";
 const evidence = process.env.EVIDENCE_DIR || "demo-kanit/round4/local";
 const menus = [
   ["dashboard", "Bugün"],
@@ -144,6 +145,7 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
   }, info) => {
     test.setTimeout(180000);
     const errors: string[] = [];
+    await installFooterAudit(page);
     page.on("pageerror", (e) => errors.push(e.message));
     page.on("console", (m) => {
       if (m.type() === "error") errors.push(m.text());
@@ -240,6 +242,7 @@ for (const role of ["Yönetici", "Depo", "Mağaza", "Muhasebe"])
     await page.reload();
     await expect(page.locator(".profile-chip")).toContainText(role);
     expect(errors).toEqual([]);
+    await verifyFooterAudit(page, info);
     await writeFile(
       join(evidence, `${info.project.name}-${role}.json`),
       JSON.stringify({ role, errors, results }, null, 2),
