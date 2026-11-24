@@ -54,3 +54,5 @@ Canlı ürün kartı ölçümü: https://github.com/veinpsycoo/kerim-erp-demo/ac
 ## Bilinen sınırlar
 
 Bu statik demo; stok, cari tutarlar ve işlemler tarayıcıya özeldir. Farklı tarayıcılarda ayrı işlemler yapılırsa stoklar farklılaşabilir; gerçek cihazlar arası işlem senkronizasyonu eklenmedi. N11 bekliyor; görsellerin temsili olanları etiketli. Fiziksel cihaz, Safari ve Firefox bu turda ölçülmedi. Önceden bulunan büyük veri paketi ve statik font yolu build uyarıları sürüyor; canlı dosya ve font yüklemesi testlerde doğrulandı. Önceki turlardan kalan tarayıcı profilleri bu çalışmada kullanılmadı veya silinmedi.
+
+Geçici `.ci-audit-watch.log` (yaklaşık 27 KB), boş `.ci-audit-failed.log` ve `test-results/.last-run.json` silme komutu otomatik güvenlik denetimince reddedildi; bu yerel çıktılar tutuldu. Yayın dosyalarına dahil değiller. Silme kısıtı başka araçla aşılmadı.

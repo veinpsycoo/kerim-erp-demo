@@ -12,3 +12,4 @@ Güvenlik: yayın öncesi/sonrası anahtar ve özel tutar taramaları temiz; son
 Kanıt: secme/ ilk 6 yenilendi; 07-toplama-390.png + 08-yonetici-1366.png eklendi; acceptance.json geçti.
 Sınır: statik/tarayıcıya özel örnek stok-cari; N11 bekliyor; fiziksel cihaz/Safari/Firefox ölçülmedi.
 Sahip: Codex. Kalan uygulama işi yok. Müşteriye mesaj gönderilmedi. Ayrıntı: DEMO-RAPOR.md.
+Temizlik: küçük yerel CI logları/test-results silme komutu otomatik denetimce reddedildi; yayına dahil değil.
