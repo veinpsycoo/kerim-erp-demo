@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { installFooterAudit, verifyFooterAudit } from "./footer-audit";
 const evidence = process.env.EVIDENCE_DIR || "demo-kanit/round4/local";
@@ -274,8 +274,10 @@ test("Klavye odağı, hareket tercihi ve rol değiştirme", async ({ page }) => 
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  const keys = await page.evaluate(() => caches.keys());
-  expect(
-    keys.filter((k) => k.startsWith("am-")).every((k) => k.endsWith("-4")),
-  ).toBe(true);
+  const expectedCache = (await readFile("dist/sw.js", "utf8")).match(
+    /const CACHE='([^']+)'/,
+  )![1];
+  await expect
+    .poll(() => page.evaluate(() => caches.keys()))
+    .toEqual([expectedCache]);
 });

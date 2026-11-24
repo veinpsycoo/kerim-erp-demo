@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export async function installFooterAudit(page: Page) {
-  await page.addInitScript(() => {
+  await page.addInitScript((viewport) => {
     const result: { checked: string[]; failures: unknown[] } = JSON.parse(
       sessionStorage.getItem("footer-audit") || '{"checked":[],"failures":[]}',
     );
@@ -11,6 +11,13 @@ export async function installFooterAudit(page: Page) {
     let scheduled = false;
     const scan = () => {
       scheduled = false;
+      // Full-page screenshots temporarily change Chromium's emulated viewport.
+      // Measure the requested device geometry, never that capture-only layout.
+      if (
+        viewport &&
+        (innerWidth !== viewport.width || innerHeight !== viewport.height)
+      )
+        return;
       document
         .querySelectorAll<HTMLButtonElement>("dialog[open] .dialog-foot button")
         .forEach((button) => {
@@ -62,7 +69,7 @@ export async function installFooterAudit(page: Page) {
     };
     if (document.body) start();
     else addEventListener("DOMContentLoaded", start, { once: true });
-  });
+  }, page.viewportSize());
 }
 
 export async function verifyFooterAudit(page: Page, info: TestInfo) {
