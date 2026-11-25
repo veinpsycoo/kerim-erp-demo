@@ -1172,6 +1172,45 @@ td input {
   display: grid;
   gap: 16px;
 }
+.pick-image {
+  margin: 0;
+  min-width: 0;
+}
+.pick-image .product-image {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
+  background: var(--canvas);
+}
+.pick-image figcaption {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.pick-product > strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.25;
+}
+.pick-demand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 6px 0;
+}
+.pick-demand .pick-quantity {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.pick-variant {
+  margin-left: 8px;
+  font-weight: 700;
+}
+.picking-dialog .dialog-body {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
 .picking-row > .product-image {
   width: 100%;
   height: 240px;
@@ -1877,4 +1916,64 @@ td input {
 .location-balances strong {
   font-size: 19px;
   white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .kpi {
+    min-height: 128px;
+    padding: 16px;
+    gap: 8px;
+  }
+  .today-layout {
+    gap: 20px;
+  }
+  .picking-dialog .dialog-head {
+    padding: 12px 16px;
+  }
+  .picking-dialog .dialog-body {
+    padding: 10px 16px calc(80px + env(safe-area-inset-bottom));
+  }
+  .picking-dialog .summary-banner {
+    margin: 0 0 8px;
+    padding: 0;
+    gap: 8px;
+    font-size: 13px;
+    flex-wrap: nowrap;
+  }
+  .picking-dialog .summary-banner > span {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .picking-dialog .summary-banner small {
+    display: inline;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+  .picking-dialog .summary-banner .badge {
+    display: none;
+  }
+  .picking-dialog .pick-progress {
+    margin: 8px 0;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .picking-dialog .picking-row {
+    gap: 10px;
+  }
+  .picking-dialog .pick-image .product-image {
+    height: clamp(100px, 23dvh, 190px);
+  }
+  .picking-dialog .pick-product > strong {
+    font-size: 20px;
+  }
+  .picking-dialog .dialog-foot {
+    flex-direction: row;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .picking-dialog .dialog-foot > button {
+    flex: 1;
+    width: auto;
+  }
 }

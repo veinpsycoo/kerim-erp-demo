@@ -897,10 +897,10 @@ export default function App() {
               </Field>
               <h2>Bu çalışma alanı hakkında</h2>
               <p>
-                Ürünler ve anonim sipariş adetleri kanallardan
-                salt okunur. Lokasyon stokları, cari tutarlar ve burada
-                kaydedilen işlemler örnektir; yalnız bu tarayıcıda saklanır.
-                Kanallara veri gönderilmez. Faturalama Paraşüt’te devam eder.
+                Ürünler ve anonim sipariş adetleri kanallardan salt okunur.
+                Lokasyon stokları, cari tutarlar ve burada kaydedilen işlemler
+                örnektir; yalnız bu tarayıcıda saklanır. Kanallara veri
+                gönderilmez. Faturalama Paraşüt’te devam eder.
               </p>
             </section>
           )}
@@ -3049,6 +3049,11 @@ export default function App() {
       {modal?.kind === "order" && order && (
         <Dialog
           title={order.id}
+          className={
+            order.status === "Toplanacak" && canStock
+              ? "picking-dialog"
+              : undefined
+          }
           busy={busy}
           error={error}
           onClose={() => setModal(undefined)}
@@ -3086,23 +3091,6 @@ export default function App() {
           </div>
           {order.status === "Toplanacak" && canStock ? (
             <>
-              <Field label="Atanan depo personeli">
-                <select name="assignee" defaultValue={order.assignee} required>
-                  {s.staff
-                    .filter(
-                      (p) =>
-                        (p.permissions
-                          ? p.permissions.includes("prepare")
-                          : p.role === "Depo") &&
-                        (p.locations || [p.location]).includes(order.location),
-                    )
-                    .map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name.replace(/^Demo /, "")}
-                      </option>
-                    ))}
-                </select>
-              </Field>
               <div className="pick-progress">
                 <strong>
                   Ürün {pickIndex + 1} / {order.lines.length}
@@ -3115,19 +3103,27 @@ export default function App() {
                 const q = draft["pick" + i] ?? l.picked;
                 return (
                   <div className="picking-row" key={i} hidden={pickIndex !== i}>
-                    <ProductImage
-                      name={pName(l.product)}
-                      image={pById(l.product).image}
-                    />
-                    <div>
+                    <figure className="pick-image">
+                      <ProductImage
+                        name={pName(l.product)}
+                        image={pById(l.product).image}
+                      />
                       {!pById(l.product).image && (
-                        <small>Temsili katalog görseli</small>
+                        <figcaption>Temsili katalog görseli</figcaption>
                       )}
+                    </figure>
+                    <div className="pick-product">
                       <strong>{pName(l.product)}</strong>
-                      <small>
-                        {pById(l.product).variants[l.variant].size} · İstenen:{" "}
-                        {l.qty} adet
-                      </small>
+                      <div
+                        className="pick-demand"
+                        aria-label={`İstenen: ${l.qty} adet`}
+                      >
+                        <strong className="pick-quantity">{l.qty}</strong>
+                        <span>adet</span>
+                        <span className="pick-variant">
+                          {pById(l.product).variants[l.variant].size}
+                        </span>
+                      </div>
                       <Tone
                         status={
                           q === 0 ? "Yok" : q === l.qty ? "Tamam" : "Eksik"
@@ -3161,6 +3157,31 @@ export default function App() {
                   </div>
                 );
               })}
+              <div className="pick-assignee">
+                <Field label="Atanan depo personeli">
+                  <select
+                    name="assignee"
+                    defaultValue={order.assignee}
+                    required
+                  >
+                    {s.staff
+                      .filter(
+                        (p) =>
+                          (p.permissions
+                            ? p.permissions.includes("prepare")
+                            : p.role === "Depo") &&
+                          (p.locations || [p.location]).includes(
+                            order.location,
+                          ),
+                      )
+                      .map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name.replace(/^Demo /, "")}
+                        </option>
+                      ))}
+                  </select>
+                </Field>
+              </div>
               <div className="pick-controls">
                 <button
                   type="button"

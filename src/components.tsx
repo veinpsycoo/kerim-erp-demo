@@ -62,6 +62,7 @@ export function Dialog({
   onSubmit,
   busy,
   submit = "Kaydet",
+  className,
   error,
 }: {
   title: string;
@@ -70,6 +71,7 @@ export function Dialog({
   onSubmit?: (f: HTMLFormElement) => void;
   busy?: boolean;
   submit?: string;
+  className?: string;
   error?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -79,6 +81,7 @@ export function Dialog({
   }, []);
   return (
     <dialog
+      className={className}
       ref={ref}
       aria-labelledby={titleId}
       onCancel={(e) => {
